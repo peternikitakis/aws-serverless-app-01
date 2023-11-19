@@ -2,6 +2,7 @@ AWSTemplateFormatVersion: "2010-09-09"
 
 Description: Serverless AWS Banking App using S3, Lambda, and API Gateway
 
+
 Resources:
   bankingS3bucket:
     Type: "AWS::S3::Bucket"
