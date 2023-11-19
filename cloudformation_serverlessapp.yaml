@@ -6,4 +6,4 @@ Resources:
   bankingS3bucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: balancestatus01
+      BucketName: balancestatus0422
