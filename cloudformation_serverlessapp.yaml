@@ -26,6 +26,7 @@ Resources:
       RoleName: LambdaexecutionRole
 
   LambdaFunction:
+    DependsOn: bankingstatusMethod
     Type: AWS::Lambda::Function
     Properties:
       Runtime: python3.9
@@ -75,9 +76,21 @@ Resources:
     RestApiId: !Ref bankingRESTAPI
     ResourceId: !Ref bankingstatusResource
     HttpMethod: GET
+    MethodResponses:
+      - StatusCode: 200
     AuthorizationType: NONE
     Integration:
       Type: AWS
+      IntegrationResponses:
+        - StatusCode: 200
       IntegrationHttpMethod: POST
       Uri: !Sub >-
         'arn:aws:apigateway:AWS::us-east-1:lambda:path/2015-03-31/functions/${Lambdafunction.Arn}invocations'
+
+  APIDeployment:
+    DependsOn: bankingstatusMethod
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref bankingRESTAPI
+      Description: My deployment to Prod
+      StageName: Prod
