@@ -80,4 +80,4 @@ Resources:
       Type: AWS
       IntegrationHttpMethod: POST
       Uri: !Sub >-
-        arn:aws:apigateway:AWS::us-east-1:lambda:path/2015-03-31/functions/${LambdaForSimpleProxy.Arn}/invocations
+        'arn:aws:apigateway:AWS::us-east-1:lambda:path/2015-03-31/functions/${Lambdafunction.Arn}invocations'
