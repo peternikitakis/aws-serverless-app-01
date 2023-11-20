@@ -56,3 +56,28 @@ Resources:
               }
       Description: API Gateway Lambda S3
       Timeout: 60
+
+  bankingRESTAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: balancestatusapi
+
+  bankingstatusResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt bankingRESTAPI.RootResourceId
+      PathPart: balanceStatus01
+      RestApiId: !Ref bankingRESTAPI
+
+  bankingstatusMethod:
+  Type: "AWS::ApiGateway::Method"
+  Properties:
+    RestApiId: !Ref bankingRESTAPI
+    ResourceId: !Ref bankingstatusResource
+    HttpMethod: GET
+    AuthorizationType: NONE
+    Integration:
+      Type: AWS
+      IntegrationHttpMethod: POST
+      Uri: !Sub >-
+        arn:aws:apigateway:AWS::us-east-1:lambda:path/2015-03-31/functions/${LambdaForSimpleProxy.Arn}/invocations
