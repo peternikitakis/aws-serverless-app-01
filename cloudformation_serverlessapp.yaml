@@ -26,18 +26,16 @@ Resources:
       RoleName: LambdaexecutionRole
 
 Lambdafunction:
-
-AWSTemplateFormatVersion: '2010-09-09'
-    Type: AWS::Lambda::Function
-    Properties:
-      Runtime: python3.9
-      Role: !GetAtt LambdaExecutionRole.Arn
-      Handler: index.handler
-      Code:
-        ZipFile: |
-          import json
-          import boto3
-          client = boto3.client('s3')
+  Type: AWS::Lambda::Function
+  Properties:
+    Runtime: python3.9
+    Role: !GetAtt LambdaExecutionRole.Arn
+    Handler: index.handler
+    Code:
+      ZipFile: |
+        import json
+        import boto3
+        client = boto3.client('s3')
 
           def lambda_handler(event, context):
               response = client.get_object(
