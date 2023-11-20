@@ -23,10 +23,10 @@ Resources:
       Description: IAM Role for Lamda to Access S3
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
-      RoleName: LambdaexecutionRole
+      RoleName: UniqueLambdaExecutionRole
 
   LambdaFunction:
-    DependsOn: bankingstatusMethod
+    DependsOn: LambdaExecutionRole
     Type: AWS::Lambda::Function
     Properties:
       Runtime: python3.9
@@ -71,21 +71,20 @@ Resources:
       RestApiId: !Ref bankingRESTAPI
 
   bankingstatusMethod:
-  Type: "AWS::ApiGateway::Method"
-  Properties:
-    RestApiId: !Ref bankingRESTAPI
-    ResourceId: !Ref bankingstatusResource
-    HttpMethod: GET
-    MethodResponses:
-      - StatusCode: 200
-    AuthorizationType: NONE
-    Integration:
-      Type: AWS
-      IntegrationResponses:
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      RestApiId: !Ref bankingRESTAPI
+      ResourceId: !Ref bankingstatusResource
+      HttpMethod: GET
+      MethodResponses:
         - StatusCode: 200
-      IntegrationHttpMethod: POST
-      Uri: !Sub >-
-        'arn:aws:apigateway:AWS::us-east-1:lambda:path/2015-03-31/functions/${Lambdafunction.Arn}invocations'
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS
+        IntegrationResponses:
+          - StatusCode: 200
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations"
 
   APIDeployment:
     DependsOn: bankingstatusMethod
@@ -94,3 +93,11 @@ Resources:
       RestApiId: !Ref bankingRESTAPI
       Description: My deployment to Prod
       StageName: Prod
+
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref LambdaFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceAccount: 103296255136
