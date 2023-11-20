@@ -55,5 +55,5 @@ Lambdafunction:
                   'body': json.dumps(data_dict),
                   'headers': {'Content-Type': 'application/json'},
               }
-      Description: API Gateway Lambda S3
-      Timeout : 60
+    Description: API Gateway Lambda S3
+    Timeout: 60
